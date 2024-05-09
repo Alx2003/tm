@@ -23,7 +23,7 @@ def main():
       )
 
       label = ptg.Label("")
-      label.value = text
+      label.value = "CPU Utilization: " + text + "%"
       tm._add_widget(label)
       
       manager.add(tm)
