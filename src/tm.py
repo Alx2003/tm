@@ -15,7 +15,19 @@ def main():
    backend_process = subprocess.Popen(['python', BACKEND_PATH], stdin=subprocess.PIPE, stdout=subprocess.PIPE)
 
    # Test communication channel
-   print(backend_process.stdout.readline().decode())
+   text = backend_process.stdout.readline().decode().strip()
+
+   with ptg.WindowManager() as manager:
+      tm = ptg.Window(
+         ptg.Label("[100]TM"),
+      )
+
+      label = ptg.Label("")
+      label.value = text
+      tm._add_widget(label)
+      
+      manager.add(tm)
+      manager.run()
 
    # Close backend
    close_backend(backend_process)
