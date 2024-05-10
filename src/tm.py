@@ -18,16 +18,24 @@ class TM(App):
       yield self.table
       yield self.footer
 
-   def on_mount(self) -> None:
+   async def on_mount(self) -> None:
       self.table.add_columns(*DATA_HEADINGS[0])
       for row in DATA_HEADINGS:
          cpu_util = psu.cpu_percent(interval=1)
          line = [f"{row[0]} {cpu_util}%",]
          self.table.add_row(*line, key="cpu_util")
+      asyncio.create_task(self.update_table())      
 
-   #Update polled value
+   async def update_table(self) -> None:
+      while True:
+         self.table.remove_row("cpu_util")
+         for row in DATA_HEADINGS:
+            cpu_util = psu.cpu_percent()
+            line = [f"{row[0]} {cpu_util}%",]
+            self.table.add_row(*line, key="cpu_util")
+         await asyncio.sleep(0.5)
 
-   def action_quit(self) -> None:
+   async def action_quit(self) -> None:
       self.exit()
 
 def main():
