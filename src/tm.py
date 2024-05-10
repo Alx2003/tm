@@ -1,36 +1,20 @@
-import subprocess
-import pytermgui as ptg
+from textual.app import App, ComposeResult
+from textual.widgets import Header, Footer
 
-BACKEND_PATH = "tm_backend.py"
+class TM(App):
+   ENABLE_COMMAND_PALETTE = False
+   BINDINGS = [("q", "quit", "Quit")]
 
-def close_backend(backend_process):
-   # Send close message
-   backend_process.stdout.close()
-   backend_process.stdin.close()
-   backend_process.wait()
+   def compose(self) -> ComposeResult:
+      yield Header()
+      yield Footer()
+
+   def action_quit(self) -> None:
+      self.exit()
 
 def main():
-
-   # Run backend script
-   backend_process = subprocess.Popen(['python', BACKEND_PATH], stdin=subprocess.PIPE, stdout=subprocess.PIPE)
-
-   # Test communication channel
-   text = backend_process.stdout.readline().decode().strip()
-
-   with ptg.WindowManager() as manager:
-      tm = ptg.Window(
-         ptg.Label("[100]TM"),
-      )
-
-      label = ptg.Label("")
-      label.value = "CPU Utilization: " + text + "%"
-      tm._add_widget(label)
-      
-      manager.add(tm)
-      manager.run()
-
-   # Close backend
-   close_backend(backend_process)
+   app = TM()
+   app.run()
 
 if __name__ == "__main__":
    main()
