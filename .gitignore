@@ -1,0 +1,9 @@
+# ignore all files
+*
+# unignore all directories so that git is aware of all possible sub dir paths
+!*/
+
+!**/src/**.c
+!**/src/**.py
+!/.gitignore
+!README.md
